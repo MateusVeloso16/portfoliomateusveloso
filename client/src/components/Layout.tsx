@@ -53,7 +53,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             className="text-xl font-bold tracking-tight cursor-pointer flex items-center gap-2"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
-            <span className="text-primary">●</span>
           </div>
 
           {/* Desktop Nav */}
