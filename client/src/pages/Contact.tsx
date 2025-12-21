@@ -33,49 +33,46 @@ export default function Contact() {
     setIsSubmitting(true);
     setError("");
 
+    const accessKey = import.meta.env.VITE_WEB3FORMS_KEY as string | undefined;
+
+    if (!accessKey) {
+      setIsSubmitting(false);
+      setError(
+        "Missing form key (VITE_WEB3FORMS_KEY). Add it to GitHub Secrets + workflow env, and to .env.local for local testing."
+      );
+      return;
+    }
+
     try {
-      const response = await fetch("https://formspree.io/f/xyzabc", {
+      const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          access_key: accessKey,
+          subject: "New message from Mateus Portfolio",
+          from_name: formData.name,
           name: formData.name,
           email: formData.email,
           message: formData.message,
-          _to: "mateus.16.veloso1@gmail.com",
+          // Optional extras:
+          // replyto: formData.email,
         }),
-      }).catch(() => {
-        return fetch("https://api.web3forms.com/submit", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            access_key: "YOUR_WEB3FORMS_KEY",
-            name: formData.name,
-            email: formData.email,
-            message: formData.message,
-            to_email: "mateus.16.veloso1@gmail.com",
-          }),
-        });
       });
 
-      if (response.ok) {
+      const data = await response.json().catch(() => null);
+
+      if (response.ok && data?.success) {
         setIsSuccess(true);
         setFormData({ name: "", email: "", message: "" });
-        setTimeout(() => {
-          setLocation("/");
-        }, 2000);
+        setTimeout(() => setLocation("/"), 2000);
       } else {
-        setError("Failed to send message. Please try again.");
+        setError(
+          data?.message ||
+            "Failed to send message. Please try again (or check Web3Forms dashboard/logs)."
+        );
       }
-    } catch (err) {
-      setIsSuccess(true);
-      setFormData({ name: "", email: "", message: "" });
-      setTimeout(() => {
-        setLocation("/");
-      }, 2000);
+    } catch {
+      setError("Network error while sending. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -102,8 +99,7 @@ export default function Contact() {
 
           <p className="text-lg text-muted-foreground mb-12">
             Have a question or want to collaborate? I'd love to hear from you.
-            Fill out the form below and I'll get back to you as soon as
-            possible.
+            Fill out the form below and I'll get back to you as soon as possible.
           </p>
 
           {isSuccess ? (
