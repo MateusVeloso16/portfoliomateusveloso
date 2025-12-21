@@ -3,12 +3,13 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch, Router as WouterRouter } from "wouter";
+import type { BaseLocationHook } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Contact from "./pages/Contact";
 
-function useHashLocation() {
+const useHashLocation: BaseLocationHook = () => {
   const getHashPath = () => window.location.hash.replace(/^#/, "") || "/";
 
   const [loc, setLoc] = React.useState(getHashPath);
@@ -23,8 +24,8 @@ function useHashLocation() {
     window.location.hash = to;
   };
 
-  return [loc, navigate] as const;
-}
+  return [loc, navigate];
+};
 
 function Routes() {
   return (
