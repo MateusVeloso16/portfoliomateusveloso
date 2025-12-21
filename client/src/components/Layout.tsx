@@ -4,7 +4,9 @@ import { Menu, X, Github, Linkedin, Mail, MessageSquare } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
+
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const [, setLocation] = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [location] = useLocation();
@@ -66,7 +68,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               variant="default" 
               size="sm" 
               className="rounded-full px-6 bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_15px_rgba(var(--primary),0.5)]"
-              onClick={() => window.location.href = '/contact'}
+              onClick={() => setLocation("/contact")}
             >
               Contact Me
             </Button>
