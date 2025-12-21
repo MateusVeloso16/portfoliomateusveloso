@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { ArrowLeft, Send, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,20 +7,24 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function Contact() {
+  const [, setLocation] = useLocation();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    message: ""
+    message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -29,8 +34,6 @@ export default function Contact() {
     setError("");
 
     try {
-      // Using EmailJS or a simple fetch to a backend service
-      // For now, we'll use a simple approach with FormSubmit.co (free service)
       const response = await fetch("https://formspree.io/f/xyzabc", {
         method: "POST",
         headers: {
@@ -40,10 +43,9 @@ export default function Contact() {
           name: formData.name,
           email: formData.email,
           message: formData.message,
-          _to: "mateus.16.veloso1@gmail.com"
-        })
+          _to: "mateus.16.veloso1@gmail.com",
+        }),
       }).catch(() => {
-        // Fallback: Use a simpler approach
         return fetch("https://api.web3forms.com/submit", {
           method: "POST",
           headers: {
@@ -54,8 +56,8 @@ export default function Contact() {
             name: formData.name,
             email: formData.email,
             message: formData.message,
-            to_email: "mateus.16.veloso1@gmail.com"
-          })
+            to_email: "mateus.16.veloso1@gmail.com",
+          }),
         });
       });
 
@@ -63,18 +65,16 @@ export default function Contact() {
         setIsSuccess(true);
         setFormData({ name: "", email: "", message: "" });
         setTimeout(() => {
-          window.location.href = "/";
+          setLocation("/");
         }, 2000);
       } else {
         setError("Failed to send message. Please try again.");
       }
     } catch (err) {
-      // Fallback: Show success message anyway (for demo purposes)
-      // In production, you'd want a proper backend
       setIsSuccess(true);
       setFormData({ name: "", email: "", message: "" });
       setTimeout(() => {
-        window.location.href = "/";
+        setLocation("/");
       }, 2000);
     } finally {
       setIsSubmitting(false);
@@ -90,7 +90,7 @@ export default function Contact() {
           transition={{ duration: 0.6 }}
         >
           <button
-            onClick={() => window.location.href = "/"}
+            onClick={() => setLocation("/")}
             className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors mb-8"
           >
             <ArrowLeft size={20} />
@@ -101,7 +101,9 @@ export default function Contact() {
           <div className="h-1 w-20 bg-primary rounded-full mb-8"></div>
 
           <p className="text-lg text-muted-foreground mb-12">
-            Have a question or want to collaborate? I'd love to hear from you. Fill out the form below and I'll get back to you as soon as possible.
+            Have a question or want to collaborate? I'd love to hear from you.
+            Fill out the form below and I'll get back to you as soon as
+            possible.
           </p>
 
           {isSuccess ? (
@@ -135,7 +137,10 @@ export default function Contact() {
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium mb-2">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium mb-2"
+                >
                   Email
                 </label>
                 <Input
@@ -151,7 +156,10 @@ export default function Contact() {
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium mb-2">
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-medium mb-2"
+                >
                   Message
                 </label>
                 <Textarea
