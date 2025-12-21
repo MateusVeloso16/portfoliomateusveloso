@@ -1,15 +1,13 @@
-import { Link, useLocation } from "wouter";
+import { useLocation } from "wouter";
 import { cn } from "@/lib/utils";
-import { Menu, X, Github, Linkedin, Mail, MessageSquare } from "lucide-react";
+import { Menu, X, Github, Linkedin, MessageSquare } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
-
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [location] = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,6 +32,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const goContact = () => {
+    setMobileMenuOpen(false);
+    setLocation("/contact");
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/30">
       {/* Navigation Bar */}
@@ -46,9 +49,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         )}
       >
         <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-          <div 
+          <div
             className="text-xl font-bold tracking-tight cursor-pointer flex items-center gap-2"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             <span className="text-primary">●</span>
           </div>
@@ -64,11 +67,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 {link.name}
               </button>
             ))}
-            <Button 
-              variant="default" 
-              size="sm" 
+
+            <Button
+              variant="default"
+              size="sm"
               className="rounded-full px-6 bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_15px_rgba(var(--primary),0.5)]"
-              onClick={() => setLocation("/contact")}
+              onClick={goContact}
             >
               Contact Me
             </Button>
@@ -95,10 +99,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 {link.name}
               </button>
             ))}
-            <Button 
-              className="w-full mt-4 rounded-full" 
-              onClick={() => window.location.href = '/contact'}
-            >
+
+            <Button className="w-full mt-4 rounded-full" onClick={goContact}>
               Contact Me
             </Button>
           </div>
@@ -106,9 +108,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </nav>
 
       {/* Main Content */}
-      <main className="pt-0">
-        {children}
-      </main>
+      <main className="pt-0">{children}</main>
 
       {/* Footer */}
       <footer className="bg-muted/20 border-t border-border/40 py-12 mt-20">
@@ -116,28 +116,30 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} Mateus Veloso. All rights reserved.
           </div>
-          
+
           <div className="flex items-center gap-6">
-            <a 
-              href="https://www.linkedin.com/in/mateus-veloso-b18629a9/" 
-              target="_blank" 
+            <a
+              href="https://www.linkedin.com/in/mateus-veloso-b18629a9/"
+              target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors"
               title="LinkedIn"
             >
               <Linkedin size={20} />
             </a>
-            <a 
+
+            <a
               href="https://github.com/MateusVeloso16"
-              target="_blank" 
+              target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors"
               title="GitHub"
             >
               <Github size={20} />
             </a>
+
             <button
-              onClick={() => window.location.href = '/contact'}
+              onClick={goContact}
               className="text-muted-foreground hover:text-primary transition-colors"
               title="Contact Me"
             >
