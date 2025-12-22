@@ -5,7 +5,6 @@
 # Build outputs
 dist/
 build/
-docs/
 *.dist
 
 # Environment variables
@@ -107,3 +106,4 @@ temp/
 *.sqlite3
 
 .env.local
+.env*
