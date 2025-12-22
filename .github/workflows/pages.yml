@@ -37,6 +37,7 @@ jobs:
           GITHUB_PAGES: "true"
           VITE_WEB3FORMS_KEY: ${{ secrets.VITE_WEB3FORMS_KEY }}
 
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
